@@ -1,0 +1,94 @@
+# Copyright 2018 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+defaults: &defaults
+  docker:
+    - image: stratospire/meetup_2018_09_12_devops_denver:0.11.8_216.0.0_1.17.1_0.1.8
+
+submodule_sync: &submodule_sync
+  name: submodule sync
+  command: |
+    git submodule sync
+    git submodule update --init
+
+configure_gcloud: &configure_gcloud
+  name: configure gcloud
+  command: |
+    echo $GOOGLE_SA_KEY > $GOOGLE_APPLICATION_CREDENTIALS
+
+plan_defaults: &plan_defaults
+  <<: *defaults
+  steps:
+    - checkout
+    - run:
+        <<: *submodule_sync
+    - run:
+        <<: *configure_gcloud
+    - run:
+        name: terraform init
+        command: |
+          cd ${DEPLOYMENT_DIR}
+          terraform init
+    - run:
+        name: plan
+        command: |
+          export TF_VAR_credentials_file_path="${GOOGLE_APPLICATION_CREDENTIALS}"
+          cd ${DEPLOYMENT_DIR}
+          terraform plan
+
+apply_defaults: &apply_defaults
+  <<: *defaults
+  steps:
+    - checkout
+    - run:
+        <<: *submodule_sync
+    - run:
+        <<: *configure_gcloud
+    - run:
+        name: terraform init
+        command: |
+          cd ${DEPLOYMENT_DIR}
+          terraform init
+    - run:
+        name: apply
+        command: |
+          export TF_VAR_credentials_file_path="${GOOGLE_APPLICATION_CREDENTIALS}"
+          cd ${DEPLOYMENT_DIR}
+          terraform apply -auto-approve
+
+version: 2
+jobs:
+  plan_example:
+    <<: *plan_defaults
+    environment:
+      DEPLOYMENT_DIR: "deployments/example"
+  apply_example:
+    <<: *defaults
+    <<: *apply_defaults
+    environment:
+      DEPLOYMENT_DIR: "deployments/example"
+
+workflows:
+  version: 2
+  lint_and_bump:
+    jobs:
+      - plan_example:
+          context: meetup-demo
+      - apply_example:
+          requires:
+            - plan_example
+          filters:
+            branches:
+              only: master
+          context: meetup-demo
