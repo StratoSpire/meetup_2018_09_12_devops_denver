@@ -1,0 +1,9 @@
+[submodule "project-factory"]
+	path = modules/project-factory
+	url = https://github.com/terraform-google-modules/terraform-google-project-factory.git
+[submodule "network"]
+	path = modules/network
+	url = https://github.com/terraform-google-modules/terraform-google-network.git
+[submodule "kubernetes-engine"]
+	path = modules/kubernetes-engine
+	url = https://github.com/terraform-google-modules/terraform-google-kubernetes-engine.git
