@@ -13,6 +13,9 @@ See [Using Environment Variables](https://circleci.com/docs/2.0/env-vars/) for c
 - `TF_VAR_billing_account` - The GCP billing account
 - `TF_VAR_group_name` - The gsuite group name to grant appropriate permissions
 
+## Slide Deck
+[Denver DevOps Meetup September 12, 2018](https://drive.google.com/open?id=12x7sys8ynFV66cw42VW1O43IFrqwxETdWa-qFYoUBcU)
+
 ## Asciinema Recording
 [![asciicast](https://asciinema.org/a/FygCQHk8YHhAjaHpFU4de5o0s.png)](https://asciinema.org/a/FygCQHk8YHhAjaHpFU4de5o0s)
 To play back in your local terminal run `asciinema play https://asciinema.org/a/FygCQHk8YHhAjaHpFU4de5o0s`
