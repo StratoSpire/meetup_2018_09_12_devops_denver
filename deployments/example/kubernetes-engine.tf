@@ -29,8 +29,8 @@ module "example-kubernetes-engine" {
     {
       name            = "default-node-pool"
       machine_type    = "n1-standard-1"
-      min_count       = 1
-      max_count       = 2
+      min_count       = 2
+      max_count       = 5
       auto_upgrade    = false
       service_account = "project-service-account@meetup-example-project-dd9e.iam.gserviceaccount.com"
     },
